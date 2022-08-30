@@ -6,10 +6,9 @@ module user_module_341419328215712339_tb;
 wire [7:0] io_in;
 wire [7:0] io_out;
 
-reg clk, reset, write_en;
-reg [4:0] pdm_input;
+reg clk;
 
-assign io_in = {pdm_input, write_en, reset, clk};
+assign io_in = {7'b0, clk};
 
 user_module_341419328215712339 UUT (.io_in(io_in), .io_out(io_out));
 
@@ -33,35 +32,35 @@ always begin
     #(CLK_HALF_PERIOD);
 end
 
-initial 
-begin
-    #20
-    reset = 1;
-    #(CLK_HALF_PERIOD);
-    reset = 0;
-end
+//initial 
+//begin
+    //#20
+    //reset = 1;
+    //#(CLK_HALF_PERIOD);
+    //reset = 0;
+//end
 
-initial begin
-    write_en = 0;
-    pdm_input = 5'h00;
-    #(CLK_HALF_PERIOD);
-    #(5*TCLK)
-    write_en = 1;
-    pdm_input= 5'h08;
-    #(TCLK);
-    write_en = 0;
-    #(63*TCLK);
-    write_en = 1;
-    pdm_input= 5'h1a;
-    #(TCLK);
-    write_en = 0;
-    #(63*TCLK);
-    write_en = 1;
-    pdm_input= 5'h0f;
-    #(64*TCLK);
-    pdm_input= 5'h04;
-    #(64*TCLK);
-    $finish;
-end
+//initial begin
+    //write_en = 0;
+    //pdm_input = 5'h00;
+    //#(CLK_HALF_PERIOD);
+    //#(5*TCLK)
+    //write_en = 1;
+    //pdm_input= 5'h08;
+    //#(TCLK);
+    //write_en = 0;
+    //#(63*TCLK);
+    //write_en = 1;
+    //pdm_input= 5'h1a;
+    //#(TCLK);
+    //write_en = 0;
+    //#(63*TCLK);
+    //write_en = 1;
+    //pdm_input= 5'h0f;
+    //#(64*TCLK);
+    //pdm_input= 5'h04;
+    //#(64*TCLK);
+    //$finish;
+//end
 
 endmodule

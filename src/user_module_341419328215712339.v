@@ -9,23 +9,43 @@ module user_module_341419328215712339(
 	output reg [7:0] io_out
 );
 	wire clk25 = io_in[0];
-	reg [24:0]cnt;
+	wire [1:0]sw1 = io_in[2:1];
+	wire sw2 = io_in[3];
+	reg [25:0]cnt = 0;
 	always @ (posedge clk25) begin
 		cnt <= cnt + 1;
 	end
-	wire clkslow = cnt[22];
-	reg [6:0]cntslow;
+	wire clkslow = cnt[22 + sw1];
+	reg [6:0]cntslow = 0;
+	reg [2:0]cntf = 0;
 	always @ (posedge clkslow) begin
-		cntslow <= cntslow == 101 ? 0 : cntslow + 1;
+		cntslow <= cntslow == 105 ? 0 : cntslow + 1;
+		if (!cntslow[0]) begin
+			if (cntslow >= 73) begin
+				cntf <= cntf == 4 ? 0 : cntf + 1;
+			end else
+				cntf <= 0;
+		end
+	end
+	reg	[2:0]finalpos;
+	always @ (*) begin
+		finalpos = 0;
+		case (cntf)
+			0: finalpos = 2;
+			1: finalpos = 6;
+			2: finalpos = 0;
+			3: finalpos = 3;
+			4: finalpos = 5;
+		endcase
 	end
 	always @ (*) begin
 		io_out = 0;
-		if (cntslow >= 1 && cntslow <= 8) io_out = 8'b10000000 >>> cntslow;
-		else if (cntslow >= 9 && cntslow <= 16) io_out = 8'b11111111 << (cntslow - 9);
-		else if (cntslow >= 17 && cntslow <= 24) io_out = 8'b10000000 >> (cntslow - 17);
-		else if (cntslow >= 25 && cntslow <= 32) io_out = 8'b00000001 << (cntslow - 25);
-		else if (cntslow >= 33 && cntslow <= 53) io_out = cntslow[0] ? 8'b00000000 : 8'b11111111;
-		else if (cntslow >= 54 && cntslow <= 70) io_out = cntslow[0] ? 8'b11110000 : 8'b00001111;
-		//else if (cntslow >= 71 && cntslow <= 101 && cntslow[0] == 0) io_out = cntslow[0] ? 8'b11110000 : 8'b00001111;
+		if (cntslow >= 1 && cntslow <= 8) io_out = 8'b11111111 << (8 - cntslow);
+		else if (cntslow >= 9 && cntslow <= 17) io_out = 8'b11111111 << (cntslow - 9);
+		else if (cntslow >= 18 && cntslow <= 25) io_out = 8'b10000000 >> (cntslow - 18);
+		else if (cntslow >= 26 && cntslow <= 33) io_out = 8'b00000001 << (cntslow - 26);
+		else if (cntslow >= 35 && cntslow <= 55) io_out = cntslow[0] ? 8'b00000000 : 8'b11111111;
+		else if (cntslow >= 56 && cntslow <= 72) io_out = cntslow[0] ? 8'b11110000 : 8'b00001111;
+		else if (cntslow >= 73 && cntslow[0] == 0) io_out = 8'b10000000 >> finalpos;
 	end
 endmodule
