@@ -9,7 +9,7 @@
 `endif
 */
 
-module scan_wrapper_341419328215712339 (
+module scan_wrapper_USER_MODULE_ID (
     input wire clk_in,
     input wire data_in,
     input wire scan_select_in,
