@@ -5,34 +5,27 @@
 //  although (if one is present) it is recommended to place a clock on io_in[0].
 //  This allows use of the internal clock divider if you wish.
 module user_module_341419328215712339(
-  input [7:0] io_in, 
-  output [7:0] io_out
+	input [7:0] io_in, 
+	output reg [7:0] io_out
 );
-  wire clk = io_in[0];
-  reg [9:0] hcnt;
-  reg [9:0] vcnt;
-  wire hsync;
-  wire vsync;
-  wire px_r = 0;
-  wire px_g = 0;
-  wire px_b = 0;
-  assign io_out[0] = hsync;
-  assign io_out[1] = vsync;
-  assign io_out[2] = px_r;
-  assign io_out[3] = px_g;
-  assign io_out[4] = px_b;
-  always @ (posedge clk) begin
-	  if (hcnt == 799) begin
-		  hcnt <= 0;
-		  if (vcnt == 524)
-			  vcnt <= 0;
-		  else
-			  vcnt <= vcnt + 1'b1;
-	  end else
-		  hcnt <= hcnt + 1'b1;
-  end
-
-  assign vsync = (vcnt >= 490 && vcnt < 492) ? 1'b0 : 1'b1;
-  assign hsync = (hcnt >= 656 && hcnt < 752) ? 1'b0 : 1'b1;
-
+	wire clk25 = io_in[0];
+	reg [24:0]cnt;
+	always @ (posedge clk25) begin
+		cnt <= cnt + 1;
+	end
+	wire clkslow = cnt[22];
+	reg [6:0]cntslow;
+	always @ (posedge clkslow) begin
+		cntslow <= cntslow == 101 ? 0 : cntslow + 1;
+	end
+	always @ (*) begin
+		io_out = 0;
+		if (cntslow >= 1 && cntslow <= 8) io_out = 8'b10000000 >>> cntslow;
+		else if (cntslow >= 9 && cntslow <= 16) io_out = 8'b11111111 << (cntslow - 9);
+		else if (cntslow >= 17 && cntslow <= 24) io_out = 8'b10000000 >> (cntslow - 17);
+		else if (cntslow >= 25 && cntslow <= 32) io_out = 8'b00000001 << (cntslow - 25);
+		else if (cntslow >= 33 && cntslow <= 53) io_out = cntslow[0] ? 8'b00000000 : 8'b11111111;
+		else if (cntslow >= 54 && cntslow <= 70) io_out = cntslow[0] ? 8'b11110000 : 8'b00001111;
+		//else if (cntslow >= 71 && cntslow <= 101 && cntslow[0] == 0) io_out = cntslow[0] ? 8'b11110000 : 8'b00001111;
+	end
 endmodule
