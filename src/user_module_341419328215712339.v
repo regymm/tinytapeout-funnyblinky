@@ -26,8 +26,8 @@ module user_module_341419328215712339(
 	reg sig1rr;
 	reg sig2rr;
 
-	reg [13:0]cnt = 0;
-	reg [13:0]cnt2 = 0;
+	reg [14:0]cnt = 0;
+	reg [14:0]cnt2 = 0;
 	always @ (posedge clk25) begin
 		sig1r <= signal1;
 		sig2r <= signal2;
@@ -85,9 +85,9 @@ module user_module_341419328215712339(
 		io_out_cnter = 0;
 		case (sw_outctrl)
 			2'b00: io_out_cnter = cnt[7:0];
-			2'b01: io_out_cnter = {2'b0, cnt[13:8]};
+			2'b01: io_out_cnter = {1'b0, cnt[14:8]};
 			2'b10: io_out_cnter = cnt2[7:0];
-			2'b11: io_out_cnter = {2'b0, cnt2[13:8]};
+			2'b11: io_out_cnter = {1'b0, cnt2[14:8]};
 		endcase
 	end
 	assign io_out = sw_switch ? io_out_cnter : io_out_funny;
