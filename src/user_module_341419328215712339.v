@@ -9,12 +9,12 @@ module user_module_341419328215712339(
 	output reg [7:0] io_out
 );
 	wire clk25 = io_in[0];
-	wire [3:0]sw1 = io_in[4:1];
+	wire [2:0]sw1 = io_in[3:1];
 	reg [25:0]cnt = 0;
 	always @ (posedge clk25) begin
 		cnt <= cnt + 1;
 	end
-	wire clkslow = cnt[3 + sw1];
+	wire clkslow = cnt[4 + sw1];
 	reg [6:0]cntslow = 0;
 	reg [2:0]cntf = 0;
 	always @ (posedge clkslow) begin
