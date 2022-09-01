@@ -22,7 +22,6 @@ $::env(DESIGN_DIR)/scan_wrapper_341419328215712339.v"
 set ::env(FP_SIZING) absolute
 set ::env(DIE_AREA) "0 0 100 100"
 set ::env(FP_CORE_UTIL) 45
-set ::env(PL_BASIC_PLACEMENT) {1}
 
 # use alternative efabless decap cells to solve LI density issue
 set ::env(DECAP_CELL) "\
@@ -43,3 +42,5 @@ set ::env(RT_MAX_LAYER) {met4}
 # connect to first digital rails
 set ::env(VDD_NETS) [list {vccd1}]
 set ::env(GND_NETS) [list {vssd1}]
+
+set ::env(PL_TARGET_DENSITY) 0.60
